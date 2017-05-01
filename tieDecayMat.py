@@ -35,7 +35,7 @@ def getdirAdjNow(adjDict, t, n):
 
     { t: (source, target), ... }
 
-    And obtain the directed adjacency matrix for time t.
+    and obtain the directed adjacency matrix for time t.
 
     Specify the number of nodes as input.
 
@@ -47,10 +47,64 @@ def getdirAdjNow(adjDict, t, n):
             row = np.array([i[0]])
             cols = np.array([i[1]])
             data = np.array([1])
-            A = sparse.csr_matrix((data, (row, col)), shape = (n, n)
+            A = sparse.csr_matrix((data, (row, col)), shape = (n,n)
                                     dtype=np.int8)
             A_t += A
     else:
         pass
 
     return A_t
+
+def getDfdirAdjNow(df, t, n):
+    """\
+    Input an unweighted adjacency pandas DataFrame() that has the columns:
+    ['Time', 'Source', 'Target']
+
+    and obtain the directed adjacency matrix for time t.
+
+    Specify the number of nodes as input.
+    """
+    t = pd.to_datetime(t)
+    A_t = sparse.csr_matrix((num_nodes,num_nodes), dtype=np.int8)
+
+    try:
+        sources = list(df.loc[df['Time'] == str(t)]['Source'])
+        targets = list(df.loc[df['Time'] == str(t)]['Target'])
+        data = np.array([1])
+
+        for s, t in zip(sources, targets):
+            row = np.array([s])
+            col = np.array([t])
+            A = sparse.csr_matrix((data, (row,col)), shape=(n,n),
+                                    dtype=np.int8)
+            A_t = A_t + A
+
+    except:
+        pass
+
+    return A_t
+
+def decay(A_t, B_tminus1, alpha, n, threshold):
+    """\
+    Apply decay to the tie-strength matrix.
+
+    Input A(t) the adjacency matrix at time t, B(t-1) the
+    matrix of tie strengths at the previous time step, the decay rate
+    alpha, and the threshold for eliminating small values for computational
+    efficiency. Any values in the tie strength matrix that are below the value
+    given by threshold will be set to 0.
+
+    Returns the matrix of tie-strengths at time t.
+
+    """
+
+    # Calculate and apply the decay on B_tminus1
+    H_t = B_tminus1.multiply(math.exp(-alpha))
+
+    # eliminate small values from the matrix by setting them to 0
+    H_t = H_t.multiply(H_t>=thold)
+
+    # add on new values
+    B_t = H_t + A_t
+
+    return B_t
