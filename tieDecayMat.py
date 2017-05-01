@@ -6,6 +6,7 @@ Set of functions responsible for processing an adjacency list, in the form of a
 
 import numpy as np
 import pandas as pd
+from scipy import sparse
 from tqdm import *
 
 def convert_List_to_Dict(adjList):
