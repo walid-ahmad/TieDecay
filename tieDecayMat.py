@@ -7,6 +7,7 @@ Set of functions responsible for processing an adjacency list, in the form of a
 import numpy as np
 import pandas as pd
 from scipy import sparse
+import math
 from tqdm import *
 
 def convert_List_to_Dict(adjList):
@@ -46,7 +47,7 @@ def getdirAdjNow(adjDict, t, n):
     if t in adjDict.keys():
         for i in adjDict[t]:
             row = np.array([i[0]])
-            cols = np.array([i[1]])
+            col = np.array([i[1]])
             data = np.array([1])
             A = sparse.csr_matrix((data, (row, col)), shape = (n,n),
                                     dtype=np.int8)
@@ -103,7 +104,7 @@ def decay(A_t, B_tminus1, alpha, threshold):
     H_t = B_tminus1.multiply(math.exp(-alpha))
 
     # eliminate small values from the matrix by setting them to 0
-    H_t = H_t.multiply(H_t>=thold)
+    H_t = H_t.multiply(H_t>=threshold)
 
     # add on new values
     B_t = H_t + A_t
