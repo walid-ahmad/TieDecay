@@ -48,7 +48,7 @@ def getdirAdjNow(adjDict, t, n):
             row = np.array([i[0]])
             cols = np.array([i[1]])
             data = np.array([1])
-            A = sparse.csr_matrix((data, (row, col)), shape = (n,n)
+            A = sparse.csr_matrix((data, (row, col)), shape = (n,n),
                                     dtype=np.int8)
             A_t += A
     else:
@@ -66,7 +66,7 @@ def getDfdirAdjNow(df, t, n):
     Specify the number of nodes as input.
     """
     t = pd.to_datetime(t)
-    A_t = sparse.csr_matrix((num_nodes,num_nodes), dtype=np.int8)
+    A_t = sparse.csr_matrix((n,n), dtype=np.int8)
 
     try:
         sources = list(df.loc[df['Time'] == str(t)]['Source'])
@@ -85,7 +85,7 @@ def getDfdirAdjNow(df, t, n):
 
     return A_t
 
-def decay(A_t, B_tminus1, alpha, n, threshold):
+def decay(A_t, B_tminus1, alpha, threshold):
     """\
     Apply decay to the tie-strength matrix.
 
