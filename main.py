@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""/
+"""\
 
 Evaluate decay matrix and tie-decay centrality scores at evenly spaced
 time points
@@ -27,8 +27,6 @@ from tqdm import *
 import tieDecayMat
 import storage
 import prcust
-
-
 
 if __name__ == "__main__":
     try:

@@ -57,6 +57,37 @@ def getdirAdjNow(adjDict, t, n):
 
     return A_t
 
+def getDecayAdjBatch(adjDict, t1, t2, n, alpha):
+    """\
+    Input an unweighted adjacency dictionary in the form:
+
+    { t: (source, target), ... }
+
+    along with the first time point, t1, and the second time point, t2.
+
+    Specify the number of nodes as input.
+
+    Obtain the decay adjacency matrix for this time window.
+    """
+
+    relKeys = [k for k in adjDict.keys() if (k > t1 and k < t2)]
+    decayDict = {k:math.exp(-alpha*(pd.to_datetime(t2) - pd.to_datetime(k)).seconds) for k in relKeys}
+    A_t = sparse.csr_matrix((n,n),dtype=np.int8)
+    #sources = [adjDict[k][0] for k in relKeys]
+    #targets = [adjDict[k][1] for k in relKeys]
+
+    for k in relKeys:
+        entry = adjDict[key]
+        for s,t in entry:
+            row = np.array([s])
+            col = np.array([t])
+            data = np.array([1])
+            b = data*decayDict[k]
+            B = sparse.csr_matrix((b, (row,col)), shape=(n,n),
+                                    dtype=np.int8)
+    return B
+
+
 def getDfdirAdjNow(df, t, n):
     """\
     Input an unweighted adjacency pandas DataFrame() that has the columns:
