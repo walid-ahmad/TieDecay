@@ -70,21 +70,23 @@ def getDecayAdjBatch(adjDict, t1, t2, n, alpha):
     Obtain the decay adjacency matrix for this time window.
     """
 
-    relKeys = [k for k in adjDict.keys() if (k > t1 and k < t2)]
-    decayDict = {k:math.exp(-alpha*(pd.to_datetime(t2) - pd.to_datetime(k)).seconds) for k in relKeys}
-    A_t = sparse.csr_matrix((n,n),dtype=np.int8)
+    relKeys = [k for k in adjDict.keys() if (k >= t1 and k <= t2)]
+    decayDict = {k:math.exp(-alpha*(pd.to_datetime(t2) - pd.to_datetime(k)).total_seconds()) for k in relKeys}
+    #A_t = sparse.csr_matrix((n,n),dtype=np.int8)
     #sources = [adjDict[k][0] for k in relKeys]
     #targets = [adjDict[k][1] for k in relKeys]
 
+    B = sparse.csr_matrix((n,n),dtype=np.float32)
     for k in relKeys:
-        entry = adjDict[key]
+        entry = adjDict[k]
         for s,t in entry:
             row = np.array([s])
             col = np.array([t])
             data = np.array([1])
             b = data*decayDict[k]
-            B = sparse.csr_matrix((b, (row,col)), shape=(n,n),
-                                    dtype=np.int8)
+            thisB = sparse.csr_matrix((b, (row,col)), shape=(n,n),
+                                    dtype=np.float32)
+            B = B + thisB
     return B
 
 
