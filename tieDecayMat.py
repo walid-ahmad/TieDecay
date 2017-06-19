@@ -57,13 +57,15 @@ def getdirAdjNow(adjDict, t, n):
 
     return A_t
 
-def getDecayAdjBatch(adjDict, t1, t2, n, alpha):
+def getDecayAdjBatch(adjDict, t1, t2, B_1, n, alpha):
     """\
     Input an unweighted adjacency dictionary in the form:
 
     { t: (source, target), ... }
 
     along with the first time point, t1, and the second time point, t2.
+
+    The initial decay matrix B_1  (at t1) is needed as input.
 
     Specify the number of nodes as input.
 
@@ -76,7 +78,7 @@ def getDecayAdjBatch(adjDict, t1, t2, n, alpha):
     #sources = [adjDict[k][0] for k in relKeys]
     #targets = [adjDict[k][1] for k in relKeys]
 
-    B = sparse.csr_matrix((n,n),dtype=np.float32)
+    B = B_1.multiply(math.exp(-alpha*(pd.to_datetime(t2) - pd.to_datetime(t1)).total_seconds()))
     for k in relKeys:
         entry = adjDict[k]
         for s,t in entry:

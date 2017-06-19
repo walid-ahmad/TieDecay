@@ -80,8 +80,7 @@ if __name__ == "__main__":
             t1 = t-pd.Timedelta(str(seconds_per_sample)+'s')
             t2 = t
 
-            B_t = tieDecayMat.getDecayAdjBatch(dataAdjDict, t1, t2, nb_users, alpha)
-            B = B+B_t
+            B = tieDecayMat.getDecayAdjBatch(dataAdjDict, t1, t2, B, nb_users, alpha)
             B = B.multiply(B>=threshold)
 
             # create network with B_t as adj matrix
