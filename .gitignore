@@ -1,6 +1,9 @@
 # Python Specific #
-*.pyc
+*.egg*
+*.ipynb_checkpoints
 *.pkl
+*.pyc
+__pycache__/
 
 
 # Compiled source #
@@ -40,3 +43,9 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+
+# Project-specific #
+debugging/
+saved_data/
+images/

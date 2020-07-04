@@ -1,0 +1,17 @@
+name: tiedecay_env
+channels:
+    - conda-forge
+dependencies:
+    - black
+    - isort
+    - jupyterlab
+    - matplotlib
+    - nb_conda_kernels
+    - networkx
+    - numpy
+    - pandas
+    - python>=3.6
+    - scikit-learn
+    - seaborn
+    - setuptools
+    - tqdm
