@@ -1,7 +1,8 @@
 # Python Specific #
-*.pyc
-*.pkl
+*.egg*
 *.ipynb_checkpoints
+*.pkl
+*.pyc
 __pycache__/
 
 

@@ -7,8 +7,10 @@ import pandas as pd
 from scipy import sparse
 from tqdm import tqdm
 
+from tiedecay.dataset import Dataset
 
-class TieDecay(object):
+
+class TieDecayNetwork(object):
     """
     Object representing the tie strengths between nodes
     in the network.
@@ -22,6 +24,7 @@ class TieDecay(object):
     """
 
     def __init__(self, dataset: Dataset, alpha: float):
+        assert type(dataset) is Dataset, "Invalid type for dataset."
         self.dataset = dataset
         self.alpha = alpha
         self.history_loaded = False
@@ -133,7 +136,6 @@ class TieDecay(object):
         df.time = pd.to_datetime(df.time)
         df_init = df[df.time == pd.to_datetime(self.dataset.t_first)]
         df_init["weight"] = 1.0
-        print(df_init)
 
         B_t = nx.from_pandas_edgelist(
             df_init,
@@ -143,7 +145,6 @@ class TieDecay(object):
             create_using=nx.DiGraph(),
         )
         edge_list_df = nx.to_pandas_edgelist(B_t)
-        print(edge_list_df)
         centrality_values = []
 
         for i, t in tqdm(enumerate(sampling_range), total=len(sampling_range)):
@@ -203,4 +204,4 @@ class TieDecay(object):
             edge_list_df = nx.to_pandas_edgelist(B_t)
         centrality_df = pd.DataFrame(centrality_values).transpose()
         centrality_df.columns = sampling_range[1:]
-        return centrality_dfs
+        return centrality_df

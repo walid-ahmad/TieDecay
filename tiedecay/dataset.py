@@ -62,8 +62,6 @@ class Dataset(object):
         self.timestamps = [x[2] for x in self.adj_list]
         self.active_nodes = set(self.sources + self.targets)
         self.num_active_nodes = len(self.active_nodes)
-        # update nodes attribute in case
-        self.nodes = self.active_nodes
 
         # Convert the adjacency list to a dictionary with timestamps as keys
         print("Converting to dictionary...")
