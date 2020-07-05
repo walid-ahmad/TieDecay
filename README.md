@@ -30,6 +30,15 @@ from tiedecay.construct import TieDecayNetwork
 alpha = np.log(2)/24/3600
 tdn = TieDecayNetwork(dataset, alpha=alpha)
 ```
+Compute centrality values at sampled time points
+```python
+centrality_df = tdn.compute_centrality_trajectories_from_dataset(100, 'pagerank')
+```
+Compute the tie-decay matrix at a given time
+```python
+t_select = "2020-01-02-12:00:00"
+B_t = tdn.compute_from_dataset(t_select)
+```
 
 ### References
 [1] arXiv preprint, 2018 [arXiv:1805.00193v2](https://arxiv.org/abs/1805.00193v2)
